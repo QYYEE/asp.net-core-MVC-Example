@@ -1,0 +1,42 @@
+﻿@model DD.Electricity.Cloud.AuthServer.Models.Account.LoginViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h4>登录</h4>
+                        <form class="form-group mt-3" asp-controller="Security" asp-action="Login" method="post">
+                            <div class="input-group mb-3">
+                                <span class="input-group-addon"><i class="glyphicon-user"></i></span>
+                                <input type="text" class="form-control" asp-for="UserName" />
+                            </div>
+                            <div class="input-group mb-4">
+                                <span class="input-group-addon"><i class="glyphicon-lock"></i></span>
+                                <input type="text" class="form-control" asp-for="Passowrd" />
+                            </div>
+                            <div class="input-group mb-4 justify-content-center">
+                                <button type="submit" class="btn px-4" >登录</button>
+                            </div>
+                            <div asp-validation-summary="All"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

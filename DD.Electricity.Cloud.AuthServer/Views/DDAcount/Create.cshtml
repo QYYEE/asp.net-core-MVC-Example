@@ -1,0 +1,107 @@
+﻿@model DD.Electricity.Cloud.AuthServer.Models.DDAccount.DDCreateUserViewModel
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create User</h2>
+
+<div class="container-fluid">
+
+        <form method="post" asp-controller="DDAcount" asp-action="Create" role="form" id="cform">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div>@Html.HiddenFor(t=>t.ProjectId)</div>
+            <div class="form-group row">
+                <label asp-for="UserName" class="control-label"></label>
+                <input type="text" asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="Password" class="control-label"></label>
+                <input type="text" asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="form-group row">
+                <label asp-for="GroupId" class="control-label"></label>
+                <select asp-items="@Model.Groups" asp-for="GroupId" class="form-control"></select>
+                <span asp-validation-for="GroupId" class="text-danger"></span>
+            </div>
+            <div class="form-group row" id="ProjectArea">
+                @if(Model.Projects.Count>0)
+                {
+                    for(var i=0; i < Model.Projects.Count; i++)
+                    {
+                        <div class="row">
+                            <div class="col-md-12">
+                                @Html.CheckBoxFor(t=>Model.Projects[i].Checked)
+                                @Html.HiddenFor(t=>t.Projects[i].Val)
+                                <label>@Model.Projects[i].Text</label>
+                            </div>
+                        </div>
+                    }
+                }
+
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+
+</div>
+
+@section Scripts{
+    <script src="~/lib/jquery/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+        $(function () {
+
+            //$('#ProjectArea').hide();
+            //选择集团
+            $('#GroupId').on('change', function () {
+                var selectedVal = $(this).val();
+                var userName = $('#UserName').val();
+                var pass = $('#Password').val();
+                if (selectedVal == -1) {//选择了选择集团
+                    $('#ProjectArea').empty();
+                }
+                else {//选择了某个集团
+                    $('#ProjectArea').load('/DDAcount/GetProjectsByGroup?groupId=' + selectedVal);
+                }
+            });
+
+            var projectTempArr = [];
+            //勾选某个项目
+            $('#cform').on('change', '.projectCk', function () {
+
+                projectTempArr = [];
+
+                if ($("input:checkbox[name='ckprojects']:checked").length == 0) {
+                    //alert('没有勾选了');
+                    //projectTempArr = [];
+                    $('#ProjectId').val('');
+                    return;
+                } else {
+                    
+                    $("input:checkbox[name='ckprojects']:checked").each(function () {
+                        //每次遍历之前清空数组
+                    
+                        //获取Project主键
+                        var projectId = $(this).parent().find('.project').val();
+                        projectTempArr.push(projectId);
+                    });
+                }
+
+
+                //如果临时数组不为空
+                if (projectTempArr.length) {
+                    var temp = projectTempArr.join(',');
+                     $('#ProjectId').val(temp);
+                }
+           
+            });
+
+        });
+    </script>
+}

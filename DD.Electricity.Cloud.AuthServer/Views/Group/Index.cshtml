@@ -1,0 +1,53 @@
+﻿@model IEnumerable<DD.Electricity.Cloud.AuthServer.Models.Group.DisplayGroupViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+<div class="container">
+    <div class="row">
+        <h1>Groups</h1>
+    </div>
+    <div>
+        <h2>
+            <a class="btn btn-primary" asp-controller="Group" asp-action="Create">创建Group</a>
+        </h2>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <tr>
+                <th>编号</th>
+                <th>名称</th>
+                <th>行业</th>
+                <th>操作</th>
+            </tr>
+            @foreach (var item in Model)
+            {
+        <tr>
+            <td>
+            @Html.DisplayFor(modelItee => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItee => item.GroupName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IndustryName)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">编辑</a>
+                <a asp-action="Details" asp-route-id="@item.Id">详情</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+            </td>
+
+        </tr>
+            }
+
+        </table>
+
+    </div>
+</div>
+    </body>
+</html>
+

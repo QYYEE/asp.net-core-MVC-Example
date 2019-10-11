@@ -1,0 +1,54 @@
+﻿@model IEnumerable<DD.Electricity.Cloud.AuthServer.Models.Project.DisplayProjectViewModel>
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h1>项目Projects</h1>
+        </div>
+    </div>
+    <div>
+        <h2><a asp-action="Create">创建Projects项目</a></h2>
+    </div>
+    <div class="row">
+        <form asp-controller="ProjectViewModel" asp-action="Index" method="get">
+
+        </form>
+    </div>
+    <div class="row">
+        <table class="table table-striped">
+            <tr>
+                <th>编号</th>
+                <th>名称</th>
+                <th>集团</th>
+                <th>操作</th>
+            </tr>
+            @foreach(var item in Model)
+            {
+        <tr>
+            <td>@Html.DisplayFor(modelItee => item.Id)</td>
+            <td>@Html.DisplayFor(modelItee => item.ProjectName)</td>
+            <td>@Html.DisplayFor(modelItee => item.GroupName)</td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">编辑</a>
+                <a asp-action="Details" asp-route-id="@item.Id">详情</a>
+                <a asp-action="Delete" asp-route-id="@item.Id">删除</a>
+
+            </td>
+        </tr>
+            }
+
+        </table>
+
+    </div>
+</body>
+</html>

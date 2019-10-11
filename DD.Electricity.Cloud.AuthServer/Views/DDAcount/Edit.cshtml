@@ -1,0 +1,129 @@
+﻿@model DD.Electricity.Cloud.AuthServer.Models.DDAccount.DDEditUserViewModel
+@{
+    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+<form asp-controller="DDAccount" asp-action="Edit" id="cform" method="post">
+
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+        <div>@Html.HiddenFor(t => t.ProjectId)</div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.UserName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @*@Html.EditorFor(model=>model.UserName)*@
+                <input class="form-control" asp-for="UserName" readonly />
+                @Html.ValidationMessageFor(model => model.UserName)
+            </div>
+        </div>
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.Password, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input class="form-control" asp-for="Password"  />
+                @Html.ValidationMessageFor(model => model.Password)
+            </div>
+        </div>
+
+        @*<div class="form-group row">
+            @Html.LabelFor(model => model.NewPassword, new { @class="control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model=>model.NewPassword)
+                @Html.ValidationMessageFor(model=>model.NewPassword)
+            </div>
+        </div>*@
+
+        <div class="form-group row">
+            @Html.LabelFor(model => model.GroupId, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <select asp-for="GroupId" asp-items="@Model.Groups" class="form-control"></select>
+                @Html.ValidationMessageFor(model => model.GroupId)
+            </div>
+        </div>
+
+
+        <div class="form-group row" id="ProjectArea">
+            @if (Model.Projects.Count > 0)
+            {
+                for (var i = 0; i < Model.Projects.Count; i++)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            @Html.CheckBoxFor(t => Model.Projects[i].Checked)
+                            @Html.HiddenFor(t => t.Projects[i].Val)
+                            <label>@Model.Projects[i].Text</label>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Edit" class="btn btn-primary" />
+        </div>
+
+    </div>
+</form>
+
+@section Scripts{
+    <script src="~/lib/jquery/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery/jquery.validate.unobtrusive.min.js"></script>
+    <script>
+
+        $(function () {
+
+            //$('#ProjectArea').hide();
+            //选择集团
+            $('#GroupId').on('change', function () {
+                var selectedVal = $(this).val();
+                var userName = $('#UserName').val();
+                var pass = $('#Password').val();
+                if (selectedVal == -1) {//选择了选择集团
+                    $('#ProjectArea').empty();
+                }
+                else {//选择了某个集团
+                    $('#ProjectArea').load('/DDAcount/GetProjectsByGroupEdit?groupId=' + selectedVal + '&projectIds=' + $('#ProjectId').val());
+                }
+            });
+
+            var projectTempArr = [];
+            //勾选某个项目
+            $('#cform').on('change', '.projectCk', function () {
+
+                projectTempArr = [];
+
+                if ($("input:checkbox[name='ckprojects']:checked").length == 0) {
+                    //alert('没有勾选了');
+                    //projectTempArr = [];
+                    $('#ProjectId').val('');
+                    return;
+                } else {
+
+                    $("input:checkbox[name='ckprojects']:checked").each(function () {
+                        //每次遍历之前清空数组
+
+                        //获取Project主键
+                        var projectId = $(this).parent().find('.project').val();
+                        projectTempArr.push(projectId);
+                    });
+                }
+
+
+                //如果临时数组不为空
+                if (projectTempArr.length) {
+                    var temp = projectTempArr.join(',');
+                     $('#ProjectId').val(temp);
+                }
+
+            });
+
+        });
+    </script>
+}
+
+
